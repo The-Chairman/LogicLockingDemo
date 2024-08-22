@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ basename }} - Circuits</title>
+<style>
+.w3-bar{width:100%;overflow:hidden}
+.w3-center .w3-bar{display:inline-block;width:auto}
+.w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+.w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
+.w3-bar .w3-button{white-space:normal}
+.w3-bar-block .w3-bar-item{width:100%;display:block;padding:8px 16px;text-align:left;border:none;white-space:normal;float:none;outline:0}
+.w3-bar-block.w3-center .w3-bar-item{text-align:center}
+.w3-block{display:block;width:100%}
+.w3-black, .w3-hover-black:hover{color:#fff!important;background-color:#000!important}
+.w3-button:hover{color:#000!important;background-color:#ccc!important}
+</style>
+    <script type="text/javascript">
+        function openCircuit(circuitName) {
+              var i;
+              var x = document.getElementsByClassName("circuit");
+              for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+              }
+              document.getElementById(circuitName).style.display = "block";
+        }
+    </script>
+    </head>
+    <body>
+        <div class="w3-bar w3-black">
+        <button class="w3-bar-item w3-button w3-black" onclick="openCircuit('Unlocked_Circuit')">Unlocked Circuit</button>
+        {% for i in locks %}
+        <button class="w3-bar-item w3-button w3-black" onclick="openCircuit('{{i}}')">{{ i }}</button>
+        {% endfor %}
+        </div>
+
+        <div class="circuit" id="Unlocked_Circuit">
+            {% with lockname="base", filename=basename + ".svg" %}
+            {% include "circuit.html" %}
+            {% endwith %}
+        </div>
+
+        {% for i in locks%}
+
+        <div id="{{ i }}" class="circuit" style="display:none">
+            {% with lockname=i, filename=locks[i]['filename'], args=locks[i]['args'] %}
+            {% include "circuit.html" %}
+            {% endwith %}
+        </div>
+        {% endfor %}
+
+
+    </body>
+</html>

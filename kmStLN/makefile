@@ -1,6 +1,6 @@
-file_main = 
-module_top = 
-odir = /mnt/c/Users/mogata/Downloads/HWSEC/$(module_top)
+file_main = kmStLN
+module_top = kmStLN
+odir = ../test_output/$(module_top)
 all_locks = full_lock full_lock_mux lut_lock mux_lock random_lut_lock sfll_flex sfll_hd trll tt_lock tt_lock_sen xor_lock
 broken_locks =
 locked_verilog=$(foreach ll,$(all_locks),$(file_main)_$(ll)_locked.v)
@@ -12,7 +12,12 @@ all: $(file_main).dot\
 		$(file_main).svg\
 		$(locked_verilog)\
 		$(locked_dot)\
-		$(locked_svg)
+		$(locked_svg)\
+		$(file_main).html
+
+$(file_main).html:
+	python ../gen_index.py -b $(file_main) -f $@ -t ../html_templates
+
 %.v:
 	echo "what $@"
 	python ../logiclock_wrapper.py -f $(file_main).v -l $(subst _locked,, $(subst $(file_main)_,,$*))
@@ -38,7 +43,8 @@ copy:
 	$(file_main).svg \
 	$(locked_verilog) \
 	$(locked_keys) \
-	$(locked_svg);do\
+	$(locked_svg) \
+	$(file_main).html;do\
 		if [ -f $$i ]; then cp $$i $(odir); fi \
 	done
 locked_verilog: $(locked_verilog)
@@ -64,9 +70,3 @@ status:
 	@for i in $(broken_locks); do\
 			echo "$$i...broken"; \
 	done
-
-
-
-
-
-
