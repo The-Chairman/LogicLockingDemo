@@ -1,0 +1,3 @@
+circuitgraph==0.2.1
+lark==1.2.2
+networkx==3.1
