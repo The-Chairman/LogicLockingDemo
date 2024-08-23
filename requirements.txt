@@ -2,3 +2,5 @@ circuitgraph==0.2.1
 lark==1.2.2
 -e git+git@github.com:circuitgraph/logiclocking.git@4f988618af5f06d6f598ca78cb85a777d6bfcebf#egg=logiclocking&subdirectory=../../logiclocking
 networkx==3.1
+python-sat==1.8.dev13
+six==1.16.0
