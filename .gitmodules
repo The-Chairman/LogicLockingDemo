@@ -1,0 +1,3 @@
+[submodule "logiclocking"]
+	path = logiclocking
+	url = git@github.com:circuitgraph/logiclocking.git

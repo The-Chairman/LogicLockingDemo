@@ -4,92 +4,90 @@ import argparse
 import os
 import sys
 from textwrap import indent
+from math import floor
+import json 
 
-BANYAN_WIDTH = 8
-LUT_WIDTH = 2
-NUM_KEYS = 32
+PERCENT_GATES=0.60
 
-BW = 2
-NG = 2
-
-LUT_NUM_GATES = 8
-
-MUX_KEY_LEN = 10
-
-RANDOM_LUT_NUM_GATES = 8
-
-SFLL_FLEX_WIDTH = 8
-SFLL_FLEX_N = 4
-
-
-SFLL_HD_WIDTH = 8
-SFLL_HD_N = 4
-
-TT_WIDTH = 8
-
-TT_LOCK_SEN_WIDTH = 8
-
-XOR_KEYLENGTH = 10
-
-def do_full_lock( source, banyan_width = BANYAN_WIDTH, lut_width = LUT_WIDTH ):
+def do_full_lock( source, banyan_width, lut_width ):
     return locks.full_lock( source, banyan_width, lut_width )
 
-def do_full_lock_mux( source, banyan_width = BANYAN_WIDTH,
-        lut_width = LUT_WIDTH ):
+def do_full_lock_mux( source, banyan_width , lut_width ):
     return locks.full_lock_mux( source, banyan_width, lut_width )
 
-def do_inter_lock( source, bw = BW, reduced_swd = False ):
+def do_inter_lock( source, bw, reduced_swd = False ):
     return locks.inter_lock( source, bw, reduced_swb = reduced_swd )
 
-def do_lebl_lock( source, bw=BANYAN_WIDTH, ng=NG ):
+def do_lebl_lock( source, bw, ng):
     return locks.lebl( source, bw, ng )
 
-def do_lut_lock( source, num_gates = LUT_NUM_GATES ):
+def do_lut_lock( source, num_gates ):
     return locks.lut_lock( source, num_gates )
 
-def do_mux_lock( source, keylen = MUX_KEY_LEN ):
+def do_mux_lock( source, keylen ):
     return locks.mux_lock( source, keylen )
 
-def do_random_lut_lock( source, num_gates = RANDOM_LUT_NUM_GATES, 
-        lut_width = LUT_WIDTH ):
+def do_random_lut_lock( source, num_gates, lut_width ):
     return locks.random_lut_lock( source, num_gates, lut_width )
 
-def do_sfll_flex_lock( source, width = SFLL_FLEX_WIDTH, 
-        n = SFLL_FLEX_N ):
+def do_sfll_flex_lock( source, width, n ):
     return locks.sfll_flex( source, width, n )
 
-def do_sfll_hd_lock( source, width = SFLL_HD_WIDTH, n = SFLL_HD_N ):
+def do_sfll_hd_lock( source, width, n ):
     return locks.sfll_hd( source, width, n )
 
-def do_trll_lock ( source, num_keys = NUM_KEYS ):
-    return locks.trll(source, num_keys)
+def do_trll_lock ( source, num_keys, s1_s2_ratio=1 ):
+    return locks.trll(source, num_keys, s1_s2_ratio=s1_s2_ratio )
 
-def do_tt_lock( source, width = TT_WIDTH ):
+def do_tt_lock( source, width ):
     return locks.tt_lock( source, width  )
 
-def do_tt_lock_sen( source, width = TT_LOCK_SEN_WIDTH ):
+def do_tt_lock_sen( source, width ):
     return locks.tt_lock_sen( source, width )
 
-def do_xor_lock( source, keylen = XOR_KEYLENGTH ):
+def do_xor_lock( source, keylen ):
     return locks.xor_lock( source, keylen )
 
 def main():
     lock_map = {
-        "full_lock": do_full_lock,
-        "full_lock_mux": do_full_lock_mux,
+        "full_lock": {
+            "callback": do_full_lock,
+            },
+        "full_lock_mux": { 
+            "callback": do_full_lock_mux,
+            },
+
         #"inter_lock": do_inter_lock, 
         # "lebl": do_lebl_lock # bugged, can't import Cadical from pysat.solvers
-        "lut_lock": do_lut_lock,
-        "mux_luck": do_mux_lock,
-        "random_lut_lock": do_random_lut_lock,
-        "sfll_flex": do_sfll_flex_lock,
-        "sfll_hd": do_sfll_hd_lock,
-        "trll": do_trll_lock,
-        "tt_lock": do_tt_lock,
-        "tt_lock_sen": do_tt_lock_sen,
-        "xor_lock": do_xor_lock,
-
+        "lut_lock": {
+            "callback": do_lut_lock,
+            },
+        "mux_lock": {
+            "callback": do_mux_lock,
+            },
+        "random_lut_lock": {
+            "callback": do_random_lut_lock,
+            },
+        "sfll_flex": {
+            "callback": do_sfll_flex_lock,
+            },
+        "sfll_hd": {
+            "callback": do_sfll_hd_lock,
+            },
+        "trll": {
+            "callback": do_trll_lock,
+            },
+        "tt_lock":  {
+            "callback": do_tt_lock,
+            },
+        "tt_lock_sen": {
+            "callback": do_tt_lock_sen,
+            },
+        "xor_lock": {
+            "callback": do_xor_lock,
+            },
     }
+
     all_locks = lock_map.keys()
 
     parser = argparse.ArgumentParser(
@@ -105,6 +103,15 @@ def main():
             help="apply all locking algorithms (default: false). Note: overides -l/--locks" )
     parser.add_argument( '-l', '--locks', metavar="LOCKS", choices=all_locks, dest="locks", nargs="+",
             help="add one (or more) of the following locking algorithms: %(choices)s" )
+
+    lock_parameter_config = parser.add_mutually_exclusive_group()
+    lock_parameter_config.add_argument( '-c', '--count-gates', dest='count_gates', action="store_true",
+            default=False, help=f"Use the gate count to try and use {PERCENT_GATES} to instruct lock\
+                    algorithms. Otherwise, this script uses some DUMB default values" )
+    lock_parameter_config.add_argument( '-u', '--use-config-file', nargs='?',
+            default="lock_config.json",
+            const="lock_config.json", dest='lock_config_file', 
+            help="load the various lock parameters in a json config file" )
 
     args = parser.parse_args()
 
@@ -125,14 +132,42 @@ def main():
         args.locks = all_locks
 
     source_file = cg.from_file( args.verilog_file )
-    for i in args.locks:
 
+    # load the lock configs
+
+    lock_config = {}
+
+    NUM_GATES = len( source_file.filter_type( ['and', 'or', 'xor', 'nor', 'nand', 'buf'] ) ) 
+
+    script_config = {}
+
+    if args.count_gates:
+        # This is REALLY janky !!!
+        p_gates = floor( NUM_GATES * PERCENT_GATES ) 
+    else:
+        print( args.lock_config_file )
+        if not os.path.isfile( args.lock_config_file ):
+            print( f"Error: can't findd the config file: {args.lock_config_file}" )
+            sys.exit(-1)
+        else:
+            script_config = json.load( open( args.lock_config_file ) )['enabled']
+
+    #LUT_LOCK_NUM_GATES = sub_gates
+    for i in set(args.locks).intersection( script_config.keys() ): 
         output_file = f"{basename}_{i}_locked.v"
         key_file= f"{basename}_{i}_locked_key.txt"
-        print( f"Generating {i}: {output_file} {key_file}" )
-        cl, k = lock_map[i]( source_file )
-        cg.to_file( cl, output_file)
-        write_key( k, key_file )
+        try:
+            print( f"Num gates {NUM_GATES}" )
+            print( f"Generating {i}: {output_file} {key_file} with {script_config[i]['args']} and {script_config[i]['kwargs']} ...", 
+                    end="" )
+            cl, k = lock_map[i]["callback"]( source_file, *script_config[i]['args'], **script_config[i]['kwargs'] )
+            cg.to_file( cl, output_file)
+            write_key( k, key_file )
+        except Exception as e:
+            print ( "failed" )
+            raise
+        else:
+            print( "Done!" )
 
 if __name__ == "__main__":
     main()
