@@ -163,6 +163,8 @@ def main():
             cl, k = lock_map[i]["callback"]( source_file, *script_config[i]['args'], **script_config[i]['kwargs'] )
             cg.to_file( cl, output_file)
             write_key( k, key_file )
+        except ValueError as ve:
+            print("Value Error!")
         except Exception as e:
             print ( "failed" )
             raise
