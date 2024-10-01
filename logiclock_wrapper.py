@@ -99,6 +99,8 @@ def main():
             help="use <basename> as the base for the output filenames. If this is blank\
                     (the deafult option) try to guess the name by stripping the .v off the\
                     input verilog file" )
+    parser.add_argument( '-d', '--output-directory', dest="output_directory", 
+                        default=".")
     parser.add_argument( '-a', '--all', dest="do_all", default=False, action="store_true",
             help="apply all locking algorithms (default: false). Note: overides -l/--locks" )
     parser.add_argument( '-l', '--locks', metavar="LOCKS", choices=all_locks, dest="locks", nargs="+",
@@ -154,8 +156,8 @@ def main():
 
     #LUT_LOCK_NUM_GATES = sub_gates
     for i in set(args.locks).intersection( script_config.keys() ): 
-        output_file = f"{basename}_{i}_locked.v"
-        key_file= f"{basename}_{i}_locked_key.txt"
+        output_file = f"{args.output_directory}/{basename}_{i}_locked.v"
+        key_file= f"{args.output_directory}/{basename}_{i}_locked_key.txt"
         try:
             print( f"Num gates {NUM_GATES}" )
             print( f"Generating {i}: {output_file} {key_file} with {script_config[i]['args']} and {script_config[i]['kwargs']} ...", 
