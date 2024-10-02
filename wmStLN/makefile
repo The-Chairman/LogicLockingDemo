@@ -3,10 +3,10 @@ module_top = wmStLN
 odir = ../test_output/$(module_top)
 all_locks = full_lock full_lock_mux lut_lock mux_lock random_lut_lock sfll_flex sfll_hd  tt_lock tt_lock_sen xor_lock
 broken_locks = trll
-locked_verilog=$(foreach ll,$(all_locks),$(file_main)_$(ll)_locked.v)
-locked_keys=$(foreach ll,$(all_locks),$(file_main)_$(ll)_locked_key.txt)
-locked_dot=$(foreach ll,$(all_locks),$(file_main)_$(ll)_locked.dot)
-locked_svg=$(foreach ll,$(all_locks),$(file_main)_$(ll)_locked.svg)
+locked_verilog=$(foreach ll,$(all_locks),$(ll)/$(file_main)_$(ll)_locked.v)
+locked_keys=$(foreach ll,$(all_locks),$(ll)/$(file_main)_$(ll)_locked_key.txt)
+locked_dot=$(foreach ll,$(all_locks),$(ll)/$(file_main)_$(ll)_locked.dot)
+locked_svg=$(foreach ll,$(all_locks),$(ll)/$(file_main)_$(ll)_locked.svg)
 
 all: $(file_main).dot\
 		$(file_main).svg\
@@ -19,20 +19,21 @@ $(file_main).html:
 	python ../gen_index.py -b $(file_main) -f $@ -t ../html_templates
 
 %.v:
-	echo "what $@"
-	python ../logiclock_wrapper.py -f $(file_main).v -l $(subst _locked,, $(subst $(file_main)_,,$*))
+	mkdir -p $(dir $@)
+	python ../logiclock_wrapper.py -f $(file_main).v -d $(dir $@) -l $(subst _locked,, $(subst $(file_main)_,,$(basename $(notdir $@))))
+
 
 %.dot: %.v
-	yosys \
-		-p "read_verilog -sv -formal $*.v" \
+	cd $(dir $@) ; yosys \
+		-p "read_verilog -sv -formal $(notdir $<)" \
 		-p "hierarchy -check -top $(module_top)" \
 		-p "hierarchy -generate" \
-		-p "show -prefix $* -notitle -colors 2 -width -format dot -stretch -enum"
+		-p "show -prefix  $(basename $(notdir $@)) -notitle -colors 2 -width -format dot -stretch -enum"
 
 %.svg: %.dot
 	dot -Tsvg -o $@ $*.dot
 
-.PHONY: copy locked_verilog clean $(all_locks) status
+.PHONY: copy locked_verilog clean clean_schematics $(all_locks) locked_dot locked_svg status
 
 $(all_locks): % : $(file_main)_%_locked.svg
 
@@ -49,9 +50,18 @@ copy:
 	done
 locked_verilog: $(locked_verilog)
 
+locked_dot: $(locked_dot)
+
+locked_svg: $(locked_svg)
+
 clean:
 	@for i in $(file_main).dot $(file_main).svg $(locked_verilog) $(locked_dot) \
 	$(locked_svg) $(locked_keys);do\
+			rm -f $$i; \
+	done
+
+clean_schematics:
+	@for i in $(file_main).dot $(file_main).svg $(locked_dot) $(locked_svg); do\
 			rm -f $$i; \
 	done
 
@@ -61,8 +71,7 @@ status:
 	$(file_main).svg \
 	$(locked_verilog) \
 	$(locked_keys) \
-	$(locked_svg) \
-	$(file_main).html;do\
+	$(locked_svg);do\
 		echo -n "$$i..." ; \
 		if [ -f $$i ]; then echo "\033[0;32mexists\033[0m" ; \
 		else echo "\033[0;31mmissing\033[0m" ; fi \
