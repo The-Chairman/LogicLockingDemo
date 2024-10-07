@@ -33,7 +33,7 @@ $(file_main).html:
 %.svg: %.dot
 	dot -Tsvg -o $@ $*.dot
 
-.PHONY: copy locked_verilog clean $(all_locks) locked_dot locked_svg status
+.PHONY: copy locked_verilog clean clean_schematics $(all_locks) locked_dot locked_svg status
 
 $(all_locks): % : $(file_main)_%_locked.svg
 
@@ -60,6 +60,11 @@ clean:
 			rm -f $$i; \
 	done
 
+clean_schematics:
+	@for i in $(file_main).dot $(file_main).svg $(locked_dot) $(locked_svg); do\
+			rm -f $$i; \
+	done
+
 status:
 	@for i in $(file_main).v \
 	$(file_main).dot \
@@ -75,4 +80,3 @@ status:
 	@for i in $(broken_locks); do\
 			echo "$$i...broken"; \
 	done
-

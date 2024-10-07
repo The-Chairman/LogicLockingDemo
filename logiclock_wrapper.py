@@ -149,7 +149,7 @@ def main():
     else:
         print( args.lock_config_file )
         if not os.path.isfile( args.lock_config_file ):
-            print( f"Error: can't findd the config file: {args.lock_config_file}" )
+            print( f"Error: can't find the config file: {args.lock_config_file}" )
             sys.exit(-1)
         else:
             script_config = json.load( open( args.lock_config_file ) )['enabled']
@@ -170,6 +170,8 @@ def main():
         except Exception as e:
             print ( "failed" )
             raise
+        except:
+            print("unknown error")
         else:
             print( "Done!" )
 

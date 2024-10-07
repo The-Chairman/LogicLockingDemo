@@ -1,8 +1,8 @@
-file_main = 
-module_top = 
-odir = ../test_output/
-all_locks = full_lock full_lock_mux lut_lock mux_lock random_lut_lock sfll_flex sfll_hd trll tt_lock tt_lock_sen xor_lock
-broken_locks =
+file_main = c432
+module_top = c432
+odir = ../test_output/$(module_top)
+all_locks = full_lock full_lock_mux lut_lock mux_lock random_lut_lock sfll_flex sfll_hd tt_lock tt_lock_sen xor_lock
+broken_locks = trll
 locked_verilog=$(foreach ll,$(all_locks),$(ll)/$(file_main)_$(ll)_locked.v)
 locked_keys=$(foreach ll,$(all_locks),$(ll)/$(file_main)_$(ll)_locked_key.txt)
 locked_dot=$(foreach ll,$(all_locks),$(ll)/$(file_main)_$(ll)_locked.dot)

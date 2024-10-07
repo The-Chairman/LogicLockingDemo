@@ -80,4 +80,3 @@ status:
 	@for i in $(broken_locks); do\
 			echo "$$i...broken"; \
 	done
-
