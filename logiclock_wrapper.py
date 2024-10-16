@@ -156,8 +156,8 @@ def main():
 
     #LUT_LOCK_NUM_GATES = sub_gates
     for i in set(args.locks).intersection( script_config.keys() ): 
-        output_file = f"{args.output_directory}/{basename}_{i}_locked.v"
-        key_file= f"{args.output_directory}/{basename}_{i}_locked_key.txt"
+        output_file = f"{args.output_directory}/{basename}_{i}.v"
+        key_file= f"{args.output_directory}/{basename}_{i}_key.txt"
         try:
             print( f"Num gates {NUM_GATES}" )
             print( f"Generating {i}: {output_file} {key_file} with {script_config[i]['args']} and {script_config[i]['kwargs']} ...", 

@@ -1,12 +1,34 @@
 import argparse
 import os
+from xml.dom import minidom
 import sys
 import json
 from jinja2 import FileSystemLoader, Environment
+import xml.etree.ElementTree as ET
 
+ns = {'svg': 'http://www.w3.org/2000/svg',
+    'xlink': 'http://www.w3.org/1999/xlink' }
+
+def render_svg( filename="", id=""):
+    if(os.path.isfile(filename) ):
+        with open( filename,"r") as fin:
+            return fin.read()
+        # tree = ET.parse( filename )
+        # ET.register_namespace( '', 'http://www.w3.org/2000/svg')
+        # ET.register_namespace( 'xlink', 'http://www.w3.org/1999/xlink')
+        # ET.register_namespace( 's', "https://github.com/nturley/netlistsvg" ) 
+        # root = tree.getroot()
+        # root.set("id", id)
+
+        # return minidom.parseString(ET.tostring(root, encoding="UTF-8")).toprettyxml(indent='\n')
+    else:
+        return "file not found"
 def render_from_template( directory, template_name, **kwargs):
     loader = FileSystemLoader( directory )
     env = Environment(loader=loader)
+
+    env.globals['render_svg'] = render_svg
+
     template = env.get_template(template_name)
     return template.render( **kwargs )
 
@@ -37,9 +59,9 @@ def main():
     locks = {}
 
     for i in config['enabled'].keys():
-        t = f"{args.basename}_{i}_locked.svg"
+        t = f"{args.basename}_{i}.svg"
         locks[i] = {
-                'filename':t,
+                'filename':f"{i}/{t}",
                 'args': config['enabled'][i]['args']
                 }
 
@@ -47,8 +69,6 @@ def main():
         fout.write( render_from_template( args.template_dir, 
             "cindex_template.html", basename=args.basename, 
             locks=locks) )
-
-
 
 if __name__ == "__main__":
     main()

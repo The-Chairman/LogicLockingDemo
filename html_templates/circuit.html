@@ -1,9 +1,17 @@
+{% set object_id = lockname | replace(".", "_") %}
+
 <h1> {{ basename }} {{ lockname }} </h1>
 <h2> Args: {{ args }} </h2>
-<!-- <embed id="e_{{ lockname }}" src="{{ filename }}"/> -->
-<!-- <object id="o_{{ lockname }}" data="{{ lockname }}/{{ filename }}" type="image/svg+xml"></object> -->
 
-<img src="{{ lockname }}/{{ filename }}" usemap="#mapname"/>
-<map name="mapname">
-    <area shape="rect"/>
-</map>
+
+<!-- <object id="{{object_id}}" data="{{ filename }}" type="image/svg+xml"></object> -->
+<div class="buttons"><button class="zoom_in">Zoom in</button><button>Zoom
+        out</button><button>Reset</button><input class="range-input" type="range" min="0.1" max="4" step="0.1"
+        value="1">
+    <div><input type="checkbox" id="disable-pan" checked=""><label for="disable-pan">Enable panning</label></div>
+</div>
+<div class="panzoom-parent" style="overflow: hidden; user-select: none; touch-action: none;">
+    <div class="panzoom" id="{{object_id}}">
+        {{ render_svg( filename=filename, id=object_id )|safe }}
+    </div>
+</div>

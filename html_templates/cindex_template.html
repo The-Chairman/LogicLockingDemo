@@ -2,18 +2,36 @@
 <html>
     <head>
         <title>{{ basename }} - Circuits</title>
-<style>
-.w3-bar{width:100%;overflow:hidden}
-.w3-center .w3-bar{display:inline-block;width:auto}
-.w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
-.w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
-.w3-bar .w3-button{white-space:normal}
-.w3-bar-block .w3-bar-item{width:100%;display:block;padding:8px 16px;text-align:left;border:none;white-space:normal;float:none;outline:0}
-.w3-bar-block.w3-center .w3-bar-item{text-align:center}
-.w3-block{display:block;width:100%}
-.w3-black, .w3-hover-black:hover{color:#fff!important;background-color:#000!important}
-.w3-button:hover{color:#000!important;background-color:#ccc!important}
-</style>
+    <style>
+        .w3-bar{width:100%;overflow:hidden}
+        .w3-center .w3-bar{display:inline-block;width:auto}
+        .w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+        .w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
+        .w3-bar .w3-button{white-space:normal}
+        .w3-bar-block .w3-bar-item{width:100%;display:block;padding:8px 16px;text-align:left;border:none;white-space:normal;float:none;outline:0}
+        .w3-bar-block.w3-center .w3-bar-item{text-align:center}
+        .w3-block{display:block;width:100%}
+        .w3-black, .w3-hover-black:hover{color:#fff!important;background-color:#000!important}
+        .w3-button:hover{color:#000!important;background-color:#ccc!important}
+
+        .circuit{
+            display:flex;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #99cccc;
+            margin-bottom: 20px;
+        }
+    </style>
+    <link href="css/panzoom.css" type="text/css">
+    <script src="../js/panzoom.js"></script>
+    <script src="../js/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
         function openCircuit(circuitName) {
               var i;
@@ -24,6 +42,7 @@
               document.getElementById(circuitName).style.display = "block";
         }
     </script>
+    
     </head>
     <body>
         <div class="w3-bar w3-black">
@@ -34,8 +53,8 @@
         </div>
 
         <div class="circuit" id="Unlocked_Circuit">
-            {% with lockname=".", filename=basename + ".svg" %}
-            {% include "circuit.html" %}
+            {% with lockname="Unlocked", filename="unlocked/" + basename + "_unlocked.svg" %}
+                {% include "circuit.html" %}
             {% endwith %}
         </div>
 
@@ -43,11 +62,22 @@
 
         <div id="{{ i }}" class="circuit" style="display:none">
             {% with lockname=i, filename=locks[i]['filename'], args=locks[i]['args'] %}
-            {% include "circuit.html" %}
+                {% include "circuit.html" %}
             {% endwith %}
         </div>
         {% endfor %}
+        <script>
+            $(document).ready( function(){
+                $(".panzoom").each( function( i, e){
+                    pz = panzoom(e, {autocenter: true, contain: 'inside'})
+                    buttons = $(this).prevAll("div.buttons")
+                    console.log(buttons)
 
+                    buttons.find(".zoom_in").first().click(pz.zoomIn)
+                    
+                })
+            });
 
+        </script>
     </body>
 </html>
