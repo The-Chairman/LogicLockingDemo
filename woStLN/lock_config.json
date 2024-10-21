@@ -28,10 +28,6 @@
             "args": [2,2], 
             "kwargs": {}
         },
-        "inter_lock": {
-            "args": [2],
-            "kwargs": {}
-        },
        "tt_lock":  {
             "args": [2], 
             "kwargs": {}
@@ -49,6 +45,10 @@
         "lebl":{
            "args": [8,2],
           "kwargs": {}
+        },
+        "inter_lock": {
+            "args": [2],
+            "kwargs": {}
         },
         "trll": {
             "args": [6], 

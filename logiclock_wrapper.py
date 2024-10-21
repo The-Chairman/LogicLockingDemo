@@ -57,7 +57,9 @@ def main():
             "callback": do_full_lock_mux,
             },
 
-        #"inter_lock": do_inter_lock, 
+        "inter_lock": {
+            "callback": do_inter_lock, 
+        },
         # "lebl": do_lebl_lock # bugged, can't import Cadical from pysat.solvers
         "lut_lock": {
             "callback": do_lut_lock,
@@ -167,6 +169,7 @@ def main():
             write_key( k, key_file )
         except ValueError as ve:
             print("Value Error!")
+            raise
         except Exception as e:
             print ( "failed" )
             raise

@@ -8,32 +8,29 @@
             "args": [4,4],
             "kwargs": {}
         },
-        "lut_lock": {
-            "args": [3],
-            "kwargs": {}
-        },
+
         "mux_lock": {
             "args": [10],
             "kwargs": {}
         },
         "random_lut_lock": {
-            "args": [2,2],
+            "args": [2,4],
             "kwargs": {}
         },
         "sfll_flex": {
-            "args": [2,8], 
+            "args": [8,4], 
             "kwargs": {}
         },
         "sfll_hd": {
-            "args": [2,2], 
+            "args": [8,4], 
             "kwargs": {}
         },
        "tt_lock":  {
-            "args": [2], 
+            "args": [4], 
             "kwargs": {}
         },
         "tt_lock_sen": {
-            "args": [2], 
+            "args": [4], 
             "kwargs": {}
         },
         "xor_lock": {
@@ -53,6 +50,11 @@
         "trll": {
             "args": [6], 
             "kwargs": {}
+        },
+        "lut_lock": {
+            "args": [3],
+            "kwargs": {},
+            "_comment": "Diagram generation takes too long"
         }
     }
 }

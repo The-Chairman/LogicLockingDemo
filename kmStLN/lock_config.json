@@ -8,14 +8,6 @@
             "args": [4,4],
             "kwargs": {}
         },
-        "inter_lock": {
-            "args": [2],
-            "kwargs": {}
-        },
-        "lebl":{
-           "args": [8,2],
-          "kwargs": {}
-        },
         "lut_lock": {
             "args": [3],
             "kwargs": {}
@@ -54,5 +46,13 @@
         }
     },
     "disabled":{
+        "inter_lock": {
+            "args": [2],
+            "kwargs": {}
+        },
+        "lebl":{
+            "args": [8,2],
+           "kwargs": {}
+         }
     }
 }
