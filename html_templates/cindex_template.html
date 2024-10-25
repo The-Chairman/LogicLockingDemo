@@ -14,11 +14,69 @@
         .w3-black, .w3-hover-black:hover{color:#fff!important;background-color:#000!important}
         .w3-button:hover{color:#000!important;background-color:#ccc!important}
 
-        .circuit{
-            display:flex;
+        body{
+            display: flex;
+            height: 100vh;
             flex-direction: column;
-            margin: 0 auto;
         }
+
+        #header{
+            flex: none;
+        }
+
+        #contents{
+            flex: 1;
+            overflow-y: scroll;
+            overflow: hidden;
+        }
+
+
+        .circuit{
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
+
+        .schematic{
+            flex: 75;
+            overflow: hidden;
+        }
+        .stats{
+            border: solid;
+            padding: 0 10px 0 10px;
+            flex:25;
+        }
+
+        .stats > table{
+            margin: 25px 25px;
+        }
+        .stats table{
+            border-collapse: collapse;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            margin: auto;
+        }
+        .stats table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .stats table tbody td.value {
+            text-align: right;
+            padding: 5px;
+            border-left: dashed;
+        }
+        .stats table tbody td.label{
+            padding: 5px;
+        }
+        .stats table tbody tr.nested td.label {
+            text-align: right;
+            vertical-align: top;
+        }
+
+
         .buttons {
             display: flex;
             flex-direction: row;
@@ -28,6 +86,7 @@
             background-color: #99cccc;
             margin-bottom: 20px;
         }
+        
     </style>
     <link href="css/panzoom.css" type="text/css">
     <script src="../js/panzoom.js"></script>
@@ -39,45 +98,114 @@
               for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";
               }
-              document.getElementById(circuitName).style.display = "block";
+              document.getElementById(circuitName).style.display = "flex";
         }
     </script>
-    
     </head>
     <body>
-        <div class="w3-bar w3-black">
-        <button class="w3-bar-item w3-button w3-black" onclick="openCircuit('Unlocked_Circuit')">Unlocked Circuit</button>
+        <div id="header" class="w3-bar w3-black">
+        <button class="w3-bar-item w3-button w3-black" onclick="openCircuit('unlocked')">Unlocked Circuit</button>
         {% for i in locks %}
         <button class="w3-bar-item w3-button w3-black" onclick="openCircuit('{{i}}')">{{ i }}</button>
         {% endfor %}
+
+        <button class="w3-bar-item w3-button w3-black" onclick="document.location='../llocking.html'">&#127968;</button>
         </div>
 
-        <div class="circuit" id="Unlocked_Circuit">
-            {% with lockname="Unlocked", filename="unlocked/" + basename + "_unlocked.svg" %}
+        <div id="contents">
+            {% with lockname="unlocked", filename_base="unlocked/" + basename + "_unlocked", style="display:flex;" %}
                 {% include "circuit.html" %}
             {% endwith %}
+
+            {% for i in locks%}
+                {% with lockname=i,filename_base=locks[i]['filename_base'], args=locks[i]['args'], style="display: none" %}
+                    {% include "circuit.html" %}
+                {% endwith %}
+            {% endfor %}
+            <script>
+
+                $(document).ready( function(){
+                    first_pz = $(".schematic" ).first()
+
+                    // Get container dimensions
+                    var container_height = first_pz.height();
+                    var container_width = first_pz.width();
+
+                    $(".circuit").each(function(){
+                        var lock_id = $(this).attr("id")
+                        var panzoom_container = $(this).find(".panzoom")
+                        var $stats_div = $(this).find(".stats");
+                        
+                        var image = $(this).find("svg").first();
+
+                        // resize panzoom container
+                        panzoom_container.width( container_width );
+                        panzoom_container.height( container_height );
+
+                        // resize svg
+
+                        //image.width(container_width);
+                        //image.height(container_height);
+
+                        // Get Image dimensions
+                        var image_height = image.height();
+                        var image_width = image.width();
+
+                        // Calculate the center of image
+                        var image_center_left = image_width / 2.0;
+                        var image_center_top = image_height / 2.0;
+
+                        // Calculate the where to move the image
+                        var initialX = ( container_width / 2.0 ) - (image_width / 2.0);
+                        var initialY = ( container_height / 2.0 ) - ( image_height / 2.0 );
+                        
+                        // Calculate the scaling factor
+                        var zoom_factor;
+
+                        // Check to determine whether to stretch along width or height 
+                        if ( container_height > image_height )
+                            zoom_factor = container_height / image_height
+                        else
+                            zoom_factor = container_width / image_width
+                        
+                        var pz = panzoom(panzoom_container[0], 
+                            { 
+                                //autocenter: true,
+                                transformOrigin: {x: 0.5, y: 0.5},
+                                bounds: true, 
+                                //initialX: initialX, 
+                                //initialY:image_center_top, 
+                                initialZoom: zoom_factor,
+                                contain:'inside', 
+                                smoothScroll: false
+                                
+                            });
+                        // buttons = $(this).prevAll("div.buttons")
+                        // //console.log(buttons)
+                        // var $info_div = $("<div id='info_'" + lock_id +"'></div>")
+                        // $info_div.appendTo($stats_div)
+                        // $info_div.html("why not!!!")
+                       
+                        // bct = pz.getTransform()
+                        // $info_div.html("Initial: <br>" + "x: " + bct.x + "<br>y:" + bct.y + "<br>scale: " + bct.scale);
+
+                        // pz.on("pan", function(e){
+                        //     ct = e.getTransform()
+                        //     $info_div.html("Pan:  <br>" + "x: " + ct.x + "<br>y:" + ct.y + "<br>scale: " + ct.scale)
+                        // })
+                        
+                        // pz.on("zoom", function(e){
+                        //     ct = e.getTransform()
+                        //     $info_div.html("Zoom: <br>" + "x: " + ct.x + "<br>y:" + ct.y + "<br>scale: " + ct.scale)
+                        // })
+                        // console.log("---" + lock_id + "---");
+
+                        // console.log("container_height:"  + container_height + " " + "container_width: " + container_width + " " + "image_height: " + image_height + " " + "image_width: " + image_width );
+                        // console.log("initialX: " + initialX + "initialY: " + image_center_top + "zoom factor:: " +  zoom_factor);
+
+                    });
+                });
+            </script>
         </div>
-
-        {% for i in locks%}
-
-        <div id="{{ i }}" class="circuit" style="display:none">
-            {% with lockname=i, filename=locks[i]['filename'], args=locks[i]['args'] %}
-                {% include "circuit.html" %}
-            {% endwith %}
-        </div>
-        {% endfor %}
-        <script>
-            $(document).ready( function(){
-                $(".panzoom").each( function( i, e){
-                    pz = panzoom(e, {autocenter: true, contain: 'inside'})
-                    buttons = $(this).prevAll("div.buttons")
-                    console.log(buttons)
-
-                    buttons.find(".zoom_in").first().click(pz.zoomIn)
-                    
-                })
-            });
-
-        </script>
     </body>
 </html>

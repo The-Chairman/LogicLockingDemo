@@ -1,0 +1,22 @@
+<table>
+    <tbody>
+        {% for s in stats['design']%}
+        {% if stats['design'][s] is mapping %}
+        <tr class="nested">
+            <td class="label" rowspan="{{ 1 + stats['design'][s]|length}}">{{s}}</td>
+        </tr>
+        {% for t in stats['design'][s] %}
+        <tr>
+            <td class="label">{{t}}</td>
+            <td class="value"> {{ stats['design'][s][t] }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td class="label" colspan="2">{{s}}</td>
+            <td class="value">{{stats['design'][s]}}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>

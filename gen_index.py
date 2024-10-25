@@ -9,7 +9,14 @@ import xml.etree.ElementTree as ET
 ns = {'svg': 'http://www.w3.org/2000/svg',
     'xlink': 'http://www.w3.org/1999/xlink' }
 
-def render_svg( filename="", id=""):
+def render_svg( filename_base="", id=""):
+    filename = f"{filename_base}_netlist.svg"
+    if not os.path.isfile( filename ):
+        filename = f"{filename_base}.svg"
+    
+    if not os.path.isfile( filename ):
+        filename = "../resources/unknown.svg"
+        
     if(os.path.isfile(filename) ):
         with open( filename,"r") as fin:
             return fin.read()
@@ -23,14 +30,25 @@ def render_svg( filename="", id=""):
         # return minidom.parseString(ET.tostring(root, encoding="UTF-8")).toprettyxml(indent='\n')
     else:
         return "file not found"
+
+
 def render_from_template( directory, template_name, **kwargs):
     loader = FileSystemLoader( directory )
     env = Environment(loader=loader)
 
+    def render_stats(stat_file):
+        if os.path.isfile(stat_file):
+            return env.get_template("stats.jinja2").render( stats=json.load( open( stat_file, "r")))
+        else:
+            return env.get_template("stats.jinja2").render( stats={"modules": {"design": { "foo": "bar"} }})
+
     env.globals['render_svg'] = render_svg
+    env.globals['render_stats'] = render_stats
 
     template = env.get_template(template_name)
     return template.render( **kwargs )
+
+
 
 def main():
     argparser = argparse.ArgumentParser()
@@ -62,6 +80,7 @@ def main():
         t = f"{args.basename}_{i}.svg"
         locks[i] = {
                 'filename':f"{i}/{t}",
+                'filename_base': f"{i}/{args.basename}_{i}",
                 'args': config['enabled'][i]['args']
                 }
 

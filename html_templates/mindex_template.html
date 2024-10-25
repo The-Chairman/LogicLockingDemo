@@ -14,11 +14,15 @@
         .w3-black, .w3-hover-black:hover{color:#fff!important;background-color:#000!important}
         .w3-button:hover{color:#000!important;background-color:#ccc!important}
 
+        body{
+            font-family:Arial, Helvetica, sans-serif
+        }
         .circuit{
             display:flex;
             flex-direction: column;
             margin: 0 auto;
         }
+        
         .buttons {
             display: flex;
             flex-direction: row;
@@ -28,15 +32,90 @@
             background-color: #99cccc;
             margin-bottom: 20px;
         }
+
+        .main_container{
+            display: flex;
+            flex-flow: row wrap;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 90%;
+            margin: auto;
+        }
+
+        .tile{
+            flex: 1 0 45%;
+            display: flex;
+            flex-direction: column;
+            margin: 5px;
+            padding: 5px 10px 5px 10px;
+            height: 500px;
+            background:rgb(134, 217, 242);
+            border-radius: 10px;
+        }
+
+        .tile_header{
+            margin:auto;
+            text-align: center;
+            width: 100%;
+        }
+
+        .fill-div{
+            display: block;
+            flex-grow: 1;
+            height: 100%;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .thumbnail{
+            border: solid;
+            height: 400px;
+        }
+
+        svg{
+            width: 100%;
+            height: 100%;           
+            border: solid;
+        }
     </style>
     <link href="css/panzoom.css" type="text/css">
-    <script src="../js/panzoom.js"></script>
-    <script src="../js/jquery-3.7.1.min.js"></script>  
+    <script src="./js/panzoom.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>  
     </head>
     <body>
-        <h1>Hello</h1>
-        {% for i in modules %}
-            {{ i }}
-        {% endfor %}
+        <div class="main_container">
+            {% for i in modules %}
+                <div class="tile">
+                    <div class="tile_header">
+                        <a href="./{{i['name']}}/{{i['name']}}.html" class="fill-div">
+                        {{ i['name'] }} <br>
+                       
+                    </a>
+                    </div>
+                    <div class="thumbnail">
+                        {{ render_thumbnail(i['name'])|safe }}
+                    </div>
+                    <hr>
+                    <div class="description">
+                        {{ i['name'] }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <script type="text/javascript">
+            function resizeSVG(){
+                $("svg").each(function(){
+                    this.width = $(this).parent().width();
+                    this.height =$(this).parent().height();
+                    console.log($(this).parent().width())
+                    console.log($(this).parent().height())
+                    console.log("resized" + this + "width " + this.width.baseVal + " height "+this.height.baseVal)
+                })
+            }
+
+            $(document).ready(resizeSVG);
+            $(window).resize(resizeSVG);
+
+            </script>
     </body>
 </html>

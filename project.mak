@@ -11,7 +11,7 @@ llocking.html:	$(foreach h,$(modules), $(h)/$(h).html)
 		$(MAKE) -C $$e -f ../circuit.mak module=$$e $$e.html ; \
 	done	
 
-.PHONY: $(modules) STATUS_ALL CLEAN_ALL
+.PHONY: $(modules) STATUS_ALL CLEAN_ALL CLEAN_REPORTS
 
 $(modules):
 	$(MAKE) -C $@ -f ../circuit.mak module=$@ $(sub_command)
@@ -24,4 +24,9 @@ STATUS_ALL:
 CLEAN_ALL:
 	for e in $(modules) ; do\
 		$(MAKE) -C $$e -f ../circuit.mak module=$$e clean ; \
+	done
+	
+CLEAN_REPORTS:
+	for e in $(modules) ; do\
+		rm -f $$e/$$e.html ; \
 	done
