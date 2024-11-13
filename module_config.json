@@ -2,27 +2,33 @@
     "modules": [
         {
             "name": "kSLN",
-            "description": ""
+            "description": "Combinational Logic",
+            "t_viewbox": "12 130 300 300"
         },
         {
             "name": "kmStLN",
-            "description": ""
+            "description": "Squentional Logic",
+            "t_viewbox": "200 240 300 300"
         },
         {
             "name": "koStLN",
-            "description": ""
+            "description": "Combinational Logic",
+            "t_viewbox": "110 190 300 300"
         },
         {
             "name": "wmStLN",
-            "description": ""
+            "description": "Simple Mux",
+            "t_viewbox": "0 0 300 300"
         },
         {
             "name": "woStLN",
-            "description": ""
+            "description": "Combinational Logic",
+            "t_viewbox": "215 260 300 300"
         },
         {
             "name": "c432",
-            "description": ""
+            "description": "27 Channel Interupt Controller - ISCAS 85 Dataset",
+            "t_viewbox": "730 1950 300 300"
         }  
     ]
 }

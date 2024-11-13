@@ -8,12 +8,15 @@
         <!-- </div> -->
     </div>
     <div class="stats">
-        <h2>{{ basename }} {{ lockname }}</h2>
+        <h2>{{ basename }} <a href="../locking_info.html#{{ lockname }}">{{lockname}}</a></h2>
         Args: {{ args }}<br>
         <hr>
         <p style="font-weight: bold; text-decoration: underline; text-align: center;">Stats</p>
         <div id="info_{{object_id}}">
             {{ render_stats(lockname + "/" + basename + "_" + lockname + "_stats.json") }}
+        </div>
+        <div>
+            {{ render_key()|safe}}
         </div>
     </div>
 </div>

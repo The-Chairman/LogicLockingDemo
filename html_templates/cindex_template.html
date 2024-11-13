@@ -118,7 +118,7 @@
             {% endwith %}
 
             {% for i in locks%}
-                {% with lockname=i,filename_base=locks[i]['filename_base'], args=locks[i]['args'], style="display: none" %}
+                {% with lockname=i,filename_base=locks[i]['filename_base'], args=locks[i]['args'], style="display: none"%}
                     {% include "circuit.html" %}
                 {% endwith %}
             {% endfor %}
@@ -180,28 +180,11 @@
                                 smoothScroll: false
                                 
                             });
-                        // buttons = $(this).prevAll("div.buttons")
-                        // //console.log(buttons)
-                        // var $info_div = $("<div id='info_'" + lock_id +"'></div>")
-                        // $info_div.appendTo($stats_div)
-                        // $info_div.html("why not!!!")
-                       
-                        // bct = pz.getTransform()
-                        // $info_div.html("Initial: <br>" + "x: " + bct.x + "<br>y:" + bct.y + "<br>scale: " + bct.scale);
-
-                        // pz.on("pan", function(e){
-                        //     ct = e.getTransform()
-                        //     $info_div.html("Pan:  <br>" + "x: " + ct.x + "<br>y:" + ct.y + "<br>scale: " + ct.scale)
-                        // })
-                        
-                        // pz.on("zoom", function(e){
-                        //     ct = e.getTransform()
-                        //     $info_div.html("Zoom: <br>" + "x: " + ct.x + "<br>y:" + ct.y + "<br>scale: " + ct.scale)
-                        // })
-                        // console.log("---" + lock_id + "---");
-
-                        // console.log("container_height:"  + container_height + " " + "container_width: " + container_width + " " + "image_height: " + image_height + " " + "image_width: " + image_width );
-                        // console.log("initialX: " + initialX + "initialY: " + image_center_top + "zoom factor:: " +  zoom_factor);
+                                    
+                        // Recolor SVG
+                        $("[s\\:type*='inputExt']").attr("fill", "{{input_color}}");
+                        $("[class*='key']").attr("fill", "{{key_color}}")
+                        $("[s\\:type*='outputExt']").attr("fill", "{{output_color}}");
 
                     });
                 });

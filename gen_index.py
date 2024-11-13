@@ -30,6 +30,10 @@ def render_svg( filename_base="", id=""):
         # return minidom.parseString(ET.tostring(root, encoding="UTF-8")).toprettyxml(indent='\n')
     else:
         return "file not found"
+    
+def render_key():
+    with open("../resources/key.svg", "r") as fin:
+        return fin.read()
 
 
 def render_from_template( directory, template_name, **kwargs):
@@ -44,6 +48,7 @@ def render_from_template( directory, template_name, **kwargs):
 
     env.globals['render_svg'] = render_svg
     env.globals['render_stats'] = render_stats
+    env.globals['render_key'] = render_key
 
     template = env.get_template(template_name)
     return template.render( **kwargs )
@@ -87,7 +92,10 @@ def main():
     with open( args.file, "w") as fout:
         fout.write( render_from_template( args.template_dir, 
             "cindex_template.html", basename=args.basename, 
-            locks=locks) )
+            locks=locks,
+            input_color="green",
+            key_color="pink",
+            output_color="red") )
 
 if __name__ == "__main__":
     main()

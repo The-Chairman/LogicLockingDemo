@@ -111,6 +111,12 @@
                     console.log($(this).parent().height())
                     console.log("resized" + this + "width " + this.width.baseVal + " height "+this.height.baseVal)
                 })
+
+                // Recolor SVG
+                $("[s\\:type*='inputExt']").attr("fill", "{{input_color}}");
+                $("[class*='key']").attr("fill", "{{key_color}}")
+                $("[s\\:type*='outputExt']").attr("fill", "{{output_color}}");
+
             }
 
             $(document).ready(resizeSVG);

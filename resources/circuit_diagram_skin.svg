@@ -11,7 +11,7 @@
     <s:low_priority_alias val="$dff" />
   </s:properties>
 <style>
-@namespace s url('https://github.com/nturley/netlistsvg');
+
 svg {
   stroke:#000;
   fill:none;
@@ -34,14 +34,6 @@ line {
 }
 .splitjoinBody {
   fill:#000;
-}
-
-[s|type="inputExt"] > path{
-  fill:blue;
-}
-
-[class*="key"]{
-  fill: green !important;
 }
 </style>
 

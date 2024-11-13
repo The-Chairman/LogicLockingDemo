@@ -23,7 +23,7 @@ def render_svg( filename="", id=""):
         # return minidom.parseString(ET.tostring(root, encoding="UTF-8")).toprettyxml(indent='\n')
     else:
         return "file not found"
-def render_thumbnail( module_name ):
+def render_thumbnail( module_name, viewbox = "0 0" ):
     filename = f"./{module_name}/unlocked/{module_name}_unlocked_netlist.svg"
     if not os.path.isfile( filename ):
         filename = f"./{module_name}/unlocked/{module_name}_unlocked.svg"
@@ -31,27 +31,22 @@ def render_thumbnail( module_name ):
     if not os.path.isfile( filename ):
         filename = "resources/unknown.svg"
 
-   # with open( filename,"r") as fin:
-        
-        #return fin.read()
     ET.register_namespace( '', 'http://www.w3.org/2000/svg')
     ET.register_namespace( 'xlink', 'http://www.w3.org/1999/xlink')
     ET.register_namespace( 's', "https://github.com/nturley/netlistsvg" ) 
     tree = ET.parse( filename )
 
+    t_width = 300
     root = tree.getroot()
-    w = root.get("width")
-    h = root.get('height')
-    root.set('viewbox', f"0 0 {w} {h}")
+    w = float(root.get("width"))
+    h = float(root.get('height'))
+    root.set("viewbox", viewbox)   
+    root.set('width', str(t_width))
+    root.set('height', str(t_width))
+
     root.set("preserveAspectRatio", "xMidYMid meet")
     del root.attrib["width"]
     del root.attrib["height"]
-    #root.set('width', '100%')
-    #root.set('height', '100%')
-    #root.set("transform", "scale(.25)")
-
-    #root.set("id", id)
-
     return ET.tostring(root, encoding='unicode')
 
 
@@ -62,8 +57,6 @@ def render_from_template( directory, template_name, **kwargs):
     env.globals['render_svg'] = render_svg
     env.globals['render_thumbnail'] = render_thumbnail
 
-    print(directory)
-    print(template_name)
     template = env.get_template(template_name)
     return template.render( **kwargs )
 
@@ -91,7 +84,12 @@ def main():
 
     with open( args.file, "w") as fout:
         fout.write( render_from_template( args.template_dir, 
-            "mindex_template.html",   modules=config['modules']) )
+            "phantom.jinja2",   
+            modules=config['modules'],             
+            input_color="green",
+            key_color="pink",
+            output_color="red" ) )
 
 if __name__ == "__main__":
     main()
+

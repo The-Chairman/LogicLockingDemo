@@ -23,7 +23,7 @@ endef
 
 all: unlocked $(enabled) $(module).html
 
-.PHONY: unlocked all_locks test clean check_clean status
+.PHONY: unlocked all_locks test clean clean_netlist_svg status
 
 unlocked: $(unlocked_files)
 all_locks: $(all_locks) $(experimental_targets)
@@ -70,4 +70,9 @@ status:
 clean:
 	@for i in unlocked $(enabled) ; do \
 		if [ -d $$i ] ; then rm -rf $$i/ ; else echo "$$i is missing" ; fi \
+	done
+
+ clean_netlist_svg:
+	@for i in `find . -type f -name "*_netlist.svg"` ; do \
+		rm $$i ; \
 	done
