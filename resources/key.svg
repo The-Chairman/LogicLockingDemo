@@ -1,0 +1,10 @@
+<svg width="200" height="175" xmlns="http://www.w3.org/2000/svg" xmlns:s="https://github.com/nturley/netlistsvg">
+    <rect s:type="inputExt" width="50" height="50" stroke="black" x="10" y="10" rx="10" ry="10" />
+    <rect class="key" width="50" height="50" stroke="black" x="10" y="65" rx="10" ry="10" />
+    <rect s:type="outputExt" width="50" height="50" stroke="black" x="10" y="120" rx="10" ry="10" />
+
+    <text x="70" y="40" font-size="22" font-family="sans-serif"> - Input</text>
+    <text x="70" y="95" font-size="22" font-family="sans-serif"> - Key Input</text>
+    <text x="70" y="150" font-size="22" font-family="sans-serif"> - Output</text>
+
+</svg>

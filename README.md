@@ -109,3 +109,9 @@ Step 3. Install python dependencies:
 ## 3. Viewing Results
 
 ---
+
+# Attribution
+
+HTML templates used for NIST Science Day 2024 Licensed under The Creative Commons 3.0 License [HTML5 UP](https://html5up.net/)
+
+

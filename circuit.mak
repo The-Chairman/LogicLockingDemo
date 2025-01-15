@@ -21,15 +21,12 @@ $(foreach e,$(yosys_generated_files),$(1)/$(module)_$(1)$(e)) : $(1)/$(module)_$
 	bash $(BIN_DIR)/yosys_build.sh $(1)/$(module)_$(1).v $(module) $(1) $(module)_$(1)
 endef
 
-all: unlocked $(enabled) $(module).html
+all: unlocked $(enabled)
 
 .PHONY: unlocked all_locks test clean clean_netlist_svg status
 
 unlocked: $(unlocked_files)
 all_locks: $(all_locks) $(experimental_targets)
-
-$(module).html: $(unlocked_files) 
-	python ../gen_index.py -b $(module) -f $@ -t ../html_templates
 	
 unlocked/$(module)_unlocked.v: $(module).v
 	mkdir -p unlocked
@@ -60,11 +57,6 @@ status:
 		done ; \
 	done
 	@echo
-
-	@echo -n "$(module).html..."
-	@if [ -f $(module).html ]; then echo "\033[0;32mexists\033[0m" ; \
-			else echo "\033[0;31mmissing\033[0m" ; fi 
-	@printf '%80s\n' | tr ' ' '#'
 
 # Clean #######################################################################
 clean:

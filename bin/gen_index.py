@@ -74,7 +74,7 @@ def main():
     args = argparser.parse_args()
 
     if not os.path.isfile( args.config_file ):
-        print( f"Error: can'e find config file: {args.config_file}")
+        print( f"Error: can't find config file: {args.config_file}")
         sys.exit(-1)
     
     config = json.load( open( args.config_file, "r") )
