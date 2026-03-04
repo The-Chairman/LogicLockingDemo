@@ -39,7 +39,7 @@ $(foreach e,$(yosys_generated_files),unlocked/$(module)_unlocked$(e)): unlocked/
 	bash $(BIN_DIR)/yosys_build.sh unlocked/$(module)_unlocked.v $(RUN_YOSYS) $(module) unlocked $(module)_unlocked
 
 %_netlist.svg: %_netlist.json
-	netlistsvg $< -o $@ --skin ../resources/circuit_diagram_skin.svg
+	#netlistsvg $< -o $@ --skin ../resources/circuit_diagram_skin.svg
 
 # Stats #######################################################################
 status:
