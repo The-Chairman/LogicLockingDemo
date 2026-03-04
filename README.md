@@ -1,6 +1,8 @@
 # llocker - Applying logic Locking to Various Circuits
 
-![project cover image](https://github.com/The-Chairman/LogicLockingDemo/resources/cover_image.png)
+<p align=center>
+  <img alt="project cover image" src="https://github.com/The-Chairman/LogicLockingDemo/blob/main/resources/cover_image.png?raw=true"/>
+</p>
 
 ## Purpose
 
