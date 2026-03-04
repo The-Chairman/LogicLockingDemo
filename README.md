@@ -1,5 +1,7 @@
 # llocker - Applying logic Locking to Various Circuits
 
+![project cover image](https://github.com/The-Chairman/LogicLockingDemo/resources/cover_image.png)
+
 ## Purpose
 
 This project was intended to familiar myself with RTL, Locking Locking Schemes, and the [OSS Cad Suite](https://github.com/YosysHQ/oss-cad-suite-build)
